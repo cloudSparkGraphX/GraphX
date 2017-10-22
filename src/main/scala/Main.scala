@@ -20,8 +20,8 @@ object Main {
       .getOrCreate()
 
     val rdd = MongoSpark.load(spark)
-    println("count:"+rdd.count)
-    println("first:"+rdd.first)
+    println("####################     count:"+rdd.count)
+    println("####################     first:"+rdd.first)
 
   }
 

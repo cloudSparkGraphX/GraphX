@@ -17,3 +17,11 @@ File -> Project Structure
 4. 等待 IntelliJ 导入项目所需的包，导入成功后，试一试能不能跑起来     
 需要根据自己本地的 mongoDB 中的 db 和 collection，改一下 myNewDB.myNewCollection1 的值  
 
+## 提交 Spark
+
+1. 打包  
+按照这上面打包的步骤打包 http://www.dlxedu.com/detail/26/483462.html  
+
+2. 提交    
+本地提交 spark-submit --class Main  --master local local:/jar文件的绝对路径  
+远程提交 参见 https://yq.aliyun.com/articles/15286  
