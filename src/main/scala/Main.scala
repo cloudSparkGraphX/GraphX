@@ -1,3 +1,4 @@
+import com.mongodb.spark.MongoSpark
 
 /**
   * Created by Shifang on 2017/10/22.
