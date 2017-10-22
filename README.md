@@ -2,8 +2,7 @@
 
 ## 环境配置
 
-1. 在 IntelliJ 中，安装 Scala 插件
-
+1. 在 IntelliJ 中，安装 Scala 插件  
 File -> Settings -> Plugins -> Install JetBrains plugin  
 搜索 Scala，然后点击 Install 安装  
 
