@@ -64,25 +64,48 @@ object Main {
 //    val user_to_group:RDD[String] = sc.textFile("hdfs://101.132.146.19:9000/user/root/testGraph/user_to_group.txt",5)
 
     //从本地拿数据
-    val users:RDD[String] = sc.textFile("d:/data/users.txt",1)
-    val groups:RDD[String] = sc.textFile("d:/data/groups.txt",1)
-    val user_to_group:RDD[String] = sc.textFile("d:/data/user_to_group.txt",1)
+    val users:RDD[String] = sc.textFile("D:/data/demoData/personInfo.txt",1)
+    val groups:RDD[String] = sc.textFile("D:/data/demoData/groupInfo.txt",1)
+    val user_to_group:RDD[String] = sc.textFile("D:/data/demoData/G2PInfoTest.txt",1)
 
-    //构造点
+    //用户 2322835;芥末籽儿(沈阳)
+    var aaa= new AtomicLong(0L)
     val userV:RDD[(VertexId,VertexProperty)]= users.map{
       line =>
-        val fields = line.split(",")
-        (fields(0).toLong,new UserProperty(fields(0).toLong,fields(1)))
+        val fields = line.split(";")
+        val id = fields(0)
+        aaa.incrementAndGet()
+        if(id==""||fields.length<2){
+          println("line "+aaa.incrementAndGet()+" "+line)
+          (0L,new UserProperty(0L,"DefaultUser"))
+        }else{
+          (fields(0).toLong,new UserProperty(fields(0).toLong,fields(1)))
+        }
     }
 
+    //小组 10001;豆瓣fans:[迷,爱好,宣传,豆瓣,互联网]
     val groupV:RDD[(VertexId,VertexProperty)] = groups.map{
       line =>
-        val fields = line.split(",")
-        (fields(0).toLong,
-          new GroupProperty(
-            fields(0).toLong,
-            fields(1),
-            fields(2).split(Array(';','[',']')).toList.drop(1)))
+        val fields = line.split(";")
+        if(fields.length<2){
+          val tags=List("")
+          (fields(0).toLong,new GroupProperty(fields(0).toLong,"DefaultGroup",tags))
+        }else{
+          val groupInfoArray = fields(1).split(":")
+          val name = groupInfoArray(0)
+          val tags=List("")
+          if(groupInfoArray.length<2){
+            (fields(0).toLong,new GroupProperty(fields(0).toLong,name,tags))
+          }else{
+            val tags=groupInfoArray(1).split(Array(';','[',']')).toList.drop(1)
+            (fields(0).toLong,
+              new GroupProperty(
+                fields(0).toLong,
+                name,
+                tags))
+          }
+        }
+
     }
 
     val nodes:RDD[(VertexId,VertexProperty)] = userV ++ groupV
@@ -90,7 +113,7 @@ object Main {
     //构造边
     val edges = user_to_group.map{
       line =>
-        val fields = line.split(",")
+        val fields = line.split(" ")
         Edge(fields(0).toLong,fields(1).toLong,1L)
     }
 
@@ -114,7 +137,6 @@ object Main {
 //    }
 
     var IDIncr= new AtomicLong(0L)
-
 
 
     val json =
